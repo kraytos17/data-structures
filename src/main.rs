@@ -1,5 +1,4 @@
-mod bit_array;
-mod circular_buffer;
+mod arrays;
 
 fn main() {
     println!("Hello, world!");
