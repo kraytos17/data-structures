@@ -5,12 +5,14 @@ use std::{
 
 type Link<T> = Option<Rc<RefCell<Node<T>>>>;
 
+#[derive(Debug)]
 struct Node<T> {
     next: Link<T>,
     prev: Option<Weak<RefCell<Node<T>>>>,
     data: T,
 }
 
+#[derive(Debug)]
 pub struct DoublyLinkedList<T> {
     head: Link<T>,
     tail: Option<Weak<RefCell<Node<T>>>>,
@@ -192,6 +194,7 @@ mod tests {
         list.push_front(1);
         list.push_front(2);
         list.push_front(3);
+
         assert_eq!(list.len(), 3);
         assert_eq!(list.peek_front(), Some(&3));
         assert_eq!(list.peek_back(), Some(&1));
@@ -203,6 +206,7 @@ mod tests {
         list.push_back(1);
         list.push_back(2);
         list.push_back(3);
+
         assert_eq!(list.len(), 3);
         assert_eq!(list.peek_front(), Some(&1));
         assert_eq!(list.peek_back(), Some(&3));
