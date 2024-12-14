@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[derive(Debug)]
 pub struct GapBuffer {
     buffer: Vec<char>,
@@ -25,10 +27,10 @@ impl GapBuffer {
         let max_pos = self.used_size();
         let new_pos = pos.min(max_pos);
 
-        if new_pos < self.cursor {
-            self.move_left(self.cursor - new_pos);
-        } else if new_pos > self.cursor {
-            self.move_right(new_pos - self.cursor);
+        match new_pos.cmp(&self.cursor) {
+            Ordering::Less => self.move_left(self.cursor - new_pos),
+            Ordering::Greater => self.move_right(new_pos - self.cursor),
+            Ordering::Equal => {}
         }
     }
 
@@ -115,7 +117,7 @@ impl GapBuffer {
         let mut result = String::with_capacity(self.used_size());
         result.extend(self.buffer.iter().take(self.cursor));
         result.extend(self.buffer.iter().skip(self.gap_end));
-        
+
         result
     }
 

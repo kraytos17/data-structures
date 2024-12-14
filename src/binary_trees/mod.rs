@@ -1,1 +1,2 @@
+mod avl;
 mod bst;

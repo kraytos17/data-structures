@@ -1,22 +1,22 @@
 use std::{cell::RefCell, rc::Rc};
 
-pub(crate) type Link<T> = Option<Rc<RefCell<Node<T>>>>;
+pub type Link<T> = Option<Rc<RefCell<BSTNode<T>>>>;
 
 #[derive(Debug)]
-pub(crate) struct Node<T> {
+pub(crate) struct BSTNode<T> {
     left: Link<T>,
     right: Link<T>,
     data: T,
 }
 
 #[derive(Debug)]
-pub struct BST<T> {
+pub struct Bst<T> {
     root: Link<T>,
 }
 
-impl<T> Node<T> {
+impl<T> BSTNode<T> {
     fn new(data: T) -> Rc<RefCell<Self>> {
-        Rc::new(RefCell::new(Node {
+        Rc::new(RefCell::new(BSTNode {
             left: None,
             right: None,
             data,
@@ -24,20 +24,20 @@ impl<T> Node<T> {
     }
 }
 
-impl<T: PartialOrd + Clone> BST<T> {
+impl<T: PartialOrd + Clone> Bst<T> {
     pub fn new() -> Self {
         Self { root: None }
     }
 
     pub fn insert(&mut self, val: T) {
-        let node = Node::new(val);
+        let node = BSTNode::new(val);
         match self.root {
-            Some(ref root) => Self::insert_node(&root, node),
+            Some(ref root) => Self::insert_node(root, node),
             None => self.root = Some(node),
         }
     }
 
-    fn insert_node(curr: &Rc<RefCell<Node<T>>>, node: Rc<RefCell<Node<T>>>) {
+    fn insert_node(curr: &Rc<RefCell<BSTNode<T>>>, node: Rc<RefCell<BSTNode<T>>>) {
         let mut borrowed_val = curr.borrow_mut();
         if node.borrow().data < borrowed_val.data {
             match borrowed_val.left {
@@ -144,7 +144,7 @@ impl<T: PartialOrd + Clone> BST<T> {
         }
     }
 
-    fn find_min(node: &Rc<RefCell<Node<T>>>) -> Rc<RefCell<Node<T>>> {
+    fn find_min(node: &Rc<RefCell<BSTNode<T>>>) -> Rc<RefCell<BSTNode<T>>> {
         match node.borrow().left {
             Some(ref left) => Self::find_min(left),
             None => Rc::clone(node),
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn test_insert_and_search() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -181,7 +181,7 @@ mod tests {
 
     #[test]
     fn test_inorder_traversal() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -198,7 +198,7 @@ mod tests {
 
     #[test]
     fn test_preorder_traversal() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -215,7 +215,7 @@ mod tests {
 
     #[test]
     fn test_postorder_traversal() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -232,7 +232,7 @@ mod tests {
 
     #[test]
     fn test_delete_leaf_node() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -248,7 +248,7 @@ mod tests {
 
     #[test]
     fn test_delete_node_with_one_child() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -264,7 +264,7 @@ mod tests {
 
     #[test]
     fn test_delete_node_with_two_children() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
@@ -282,7 +282,7 @@ mod tests {
 
     #[test]
     fn test_delete_root_node() {
-        let mut tree = BST::new();
+        let mut tree = Bst::new();
         tree.insert(5);
         tree.insert(3);
         tree.insert(7);
